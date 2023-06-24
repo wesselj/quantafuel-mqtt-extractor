@@ -31,25 +31,17 @@ def now() -> int:
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
-    logger.info("Starting custom payload simulator")
+    logger.info("Starting kchief payload simulator")
     client = mqtt_client("localhost", 1883)
 
-    topic = "custom"
-    n = 10
+    topic = "CloudBoundContainer"
+    f = open("kchief_message_CloudBoundContainer.proto", "rb")
+    message = f.read()
 
-    value = 1
-    while True:
-        t = now()
-        items = []
-        for i in range(n):
-            items.append((f"custom_int{i}", t, value))
-            items.append((f"custom_str{i}", t, str(value)))
-
-        message = items
-        logger.debug("Publish %r", message)
-        client.publish(topic, json.dumps(message))
-        time.sleep(1)
-        value += 1
+    logger.debug("Publish %r", message)
+    #client.publish(topic, message)
+    time.sleep(2)
+    client.publish(topic, message)
 
 
 if __name__ == "__main__":
