@@ -1,0 +1,33 @@
+version: 1
+
+mqtt:
+  hostname: localhost
+  port: 1883
+  
+subscriptions:
+  - topic: CloudBoundContainer
+    qos: 1
+    handler:
+      module: mqtt_extractor.kchief
+  - topic: custom
+    handler:
+      module: tests.custom
+
+upload-interval: 1
+# status-interval: 60
+# status-pipeline: mqtt-extractor
+
+
+logger:
+  console:
+    level: DEBUG
+
+cognite:
+  host: https://greenfield.cognitedata.com
+  project: bootcamp-01-test
+  idp-authentication:
+    authority: "https://login.microsoftonline.com/"
+    tenant: 16e3985b-ebe8-4e24-9da4-933e21a9fc81
+    client-id: 6e915c79-b735-4025-96ac-c1f83c45a83b
+    # secret: 
+    scopes: [ "https://greenfield.cognitedata.com/.default" ]
