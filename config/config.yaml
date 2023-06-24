@@ -5,10 +5,10 @@ mqtt:
   port: 1883
   
 subscriptions:
-  - topic: data
+  - topic: CloudBoundContainer
     qos: 1
     handler:
-      module: mqtt_extractor.cdf
+      module: mqtt_extractor.kchief
   - topic: custom
     handler:
       module: tests.custom
@@ -23,11 +23,11 @@ logger:
     level: DEBUG
 
 cognite:
-  host: https://api.cognitedata.com
-  project: xxx
+  host: https://greenfield.cognitedata.com
+  project: bootcamp-01-test
   idp-authentication:
     authority: "https://login.microsoftonline.com/"
-    # tenant: xxx-xxx
-    # client-id: xxx-xxx
-    # secret: "xYzX"
-    scopes: [ "https://api.cognitedata.com/.default" ]
+    tenant: 16e3985b-ebe8-4e24-9da4-933e21a9fc81
+    client-id: 6e915c79-b735-4025-96ac-c1f83c45a83b
+    secret: "RAE8Q~6ucfyvS-p1NujyQHk2QimmYQarfKGvacyV"
+    scopes: [ "https://greenfield.cognitedata.com/.default" ]

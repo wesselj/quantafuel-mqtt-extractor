@@ -15,7 +15,7 @@ from cognite.extractorutils.configtools import (
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
 from paho.mqtt.client import Client as MqttClient
 
-from . import metrics
+from mqtt_extractor import metrics
 
 logger = logging.getLogger(__name__)
 
