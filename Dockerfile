@@ -10,12 +10,24 @@ COPY pyproject.toml ./
 COPY poetry.lock ./
 RUN poetry export --without-hashes -f requirements.txt --output requirements.txt
 
-FROM python:3.8-slim-buster
-RUN python -m pip install --upgrade pip
-WORKDIR /cognite
-COPY --from=requirements /cognite/requirements.txt .
-RUN python -m pip install --force-reinstall -r requirements.txt
+FROM python:3.10-slim-buster
+RUN apt-get update & apt-get upgrade
+RUN groupadd -g 999 python && \
+    useradd -r -u 999 -g python python
+RUN mkdir /usr/src/app && chown python:python /usr/src/app
+WORKDIR /usr/src/app
+COPY --chown=python:python pyproject.toml .
+COPY --chown=python:python mqtt_extractor ./mqtt_extractor
+COPY --chown=python:python tests ./tests
+COPY --chown=python:python Kognifai ./Kognifai
+COPY --chown=python:python protobuf_definitions ./protobuf_definitions
+ADD pyproject.toml ./pyproject.toml
 
-ADD mqtt_extractor ./mqtt_extractor
+RUN pip install --upgrade pip && pip install poetry
+RUN poetry config virtualenvs.in-project true
+RUN poetry install
 
-ENTRYPOINT [ "python", "-m", "mqtt_extractor.main", "config/config.yaml" ]
+
+
+ENTRYPOINT [  "poetry", "run", "main", "config/config.yaml" ]
+#ENTRYPOINT [ "poetry", "run", "test_kchief", "config/config.yaml" ]

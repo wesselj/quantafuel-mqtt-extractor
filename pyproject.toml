@@ -1,12 +1,17 @@
 [tool.poetry]
 name = "soa-mqtt-extractor"
-version = "0.1.0"
+version = "0.2.0"
 description = "MQTT to CDF extractor for Salmar Aker Ocean"
 authors = ["Jørgen Wessel <joergen.wessel@cognite.com>"]
+packages = [
+    { include = "mqtt_extractor" },
+    { include = "Kognifai" },
+    { include = "tests" }
+]
 
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 cognite-extractor-utils = "^2.1.0"
 paho-mqtt = "^1.5.1"
 protobuf = "^4.23.3"
@@ -19,6 +24,7 @@ pytest = "^7.2"
 main = "mqtt_extractor.main:main"
 publish_cdf = "tests.publish_cdf:main"
 publish_custom = "tests.publish_custom:main"
+test_kchief = "tests.kchief_parser:main"
 
 [build-system]
 requires = ["poetry>=0.12"]

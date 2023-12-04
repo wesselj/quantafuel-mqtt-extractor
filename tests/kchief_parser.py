@@ -1,11 +1,18 @@
-import pytest
+import time
+
 from Kognifai import Serialization_pb2
 from Kognifai.Serialization import Timeseries_pb2
 import gzip
 
 
-def test_parse_message():
-    f = open("kchief_message_CloudBoundContainer.proto", "rb")
+def main():
+    while True:
+        test_parse_kchief()
+        time.sleep(5)
+
+
+def test_parse_kchief():
+    f = open("tests/kchief_message_CloudBoundContainer.proto", "rb")
     message = f.read()
     parse_message(message)
 
@@ -33,3 +40,5 @@ def parse_message(message):
                 print(f"Event: {ext_id}: TS: {timestamp} Value: {value}")
 
 
+if __name__ == "__main__":
+    main()

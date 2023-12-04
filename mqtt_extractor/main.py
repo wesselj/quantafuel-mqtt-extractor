@@ -2,6 +2,7 @@ import importlib
 import logging
 import sys
 import time
+from datetime import datetime
 from dataclasses import dataclass, field
 from threading import Event
 from typing import List
@@ -187,13 +188,14 @@ def main():
                     external_id = config.cognite.external_id_prefix + ts_id
 
                     # Add to TS upload queue
-                    if time_stamp is not None and value is not None:
+                    # if time_stamp is not None and value is not None:
+                    if value is not None:
+                        upload_timestamp = int(datetime.now().timestamp() * 1000)  # Source system timestamp is wrong so we use now instead.
                         upload_queue.add_to_upload_queue(
-                            external_id=external_id, datapoints=[(time_stamp, value)]
+                            external_id=external_id, datapoints=[(upload_timestamp, value)]
                         )
-
-                    if time_stamp > message_time_stamp:
-                        message_time_stamp = time_stamp
+                    if upload_timestamp > message_time_stamp:
+                        message_time_stamp = upload_timestamp
                 
                 # Upload any remaining TS in queue
                 upload_queue.upload()
