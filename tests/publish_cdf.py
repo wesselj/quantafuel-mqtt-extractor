@@ -34,7 +34,7 @@ def main():
     logger.info("Starting CDF payload publisher")
     client = mqtt_client("localhost", 1883)
 
-    topic = "cdf"
+    topic = "/virido/test"
     n = 10
 
     value = 1

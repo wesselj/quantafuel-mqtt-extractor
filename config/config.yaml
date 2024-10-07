@@ -8,10 +8,8 @@ subscriptions:
   - topic: data
     qos: 1
     handler:
-      module: mqtt_extractor.cdf
-  - topic: custom
-    handler:
-      module: tests.custom
+      module: mqtt_extractor.viridor
+
 
 upload-interval: 1
 # status-interval: 60
