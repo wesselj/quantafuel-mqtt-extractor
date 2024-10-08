@@ -5,7 +5,6 @@ description = "MQTT to CDF extractor for Salmar Aker Ocean"
 authors = ["Jørgen Wessel <joergen.wessel@cognite.com>"]
 packages = [
     { include = "mqtt_extractor" },
-    { include = "Kognifai" },
     { include = "tests" }
 ]
 

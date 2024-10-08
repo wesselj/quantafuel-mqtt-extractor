@@ -2,11 +2,11 @@ import importlib
 import logging
 import sys
 import time
+import re
 from datetime import datetime
 from dataclasses import dataclass, field
 from threading import Event
 from typing import List
-
 from cognite.client import CogniteClient
 from cognite.client.data_classes import ExtractionPipelineRun
 from cognite.extractorutils.configtools import (
@@ -16,7 +16,7 @@ from cognite.extractorutils.configtools import (
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
 from paho.mqtt.client import Client as MqttClient
 
-from mqtt_extractor import metrics
+from mqtt_extractor import metrics, viridor
 
 logger = logging.getLogger(__name__)
 
@@ -30,9 +30,10 @@ class MqttConfig:
     client_id: str = "mqtt-extractor"
     clean_session: bool = False
 
+
 @dataclass
 class Handler:
-    module: str = "mqtt_extractor.cdf"
+    module: str = "mqtt_extractor.viridor"
     function: str = "parse"
     package: str = None
 
@@ -46,6 +47,7 @@ class Subscription:
     topic: str
     handler: Handler = field(default_factory=Handler)
     qos: int = 0
+
 
 @dataclass
 class Config(BaseConfig):
@@ -68,6 +70,19 @@ def config_logging(config_file):
 
 
 _handlers = {}
+
+
+def get_handler(topic: str):
+    handler = _handlers.get(topic)
+    if not handler:
+        for handler_name in _handlers.keys():
+
+            tp_re = handler_name.replace("+", "(\\w+/?)")
+            tp_re = tp_re.replace("#", "(\\w+/?)*")
+            tp_re = "^" + tp_re + "$"
+            if re.match(tp_re, topic):
+                handler = _handlers[handler_name]
+    return handler
 
 
 def on_connect(client, userdata, flags, rc):
@@ -125,6 +140,11 @@ def main():
     cdf_time_stamp = 0
     status_time_stamp = 0
 
+    def update_time_series():
+        timeseries = viridor.get_timeseries_to_update()
+        for ts in timeseries:
+            cdf_client.time_series.update(ts)
+
     def post_upload_handler(ts_dps):
         dps = sum(len(ts["datapoints"]) for ts in ts_dps)
         metrics.cdf_data_points.inc(dps)
@@ -155,7 +175,7 @@ def main():
         except Exception:
             # Risk of too many stack traces?
             logger.exception("post upload handler")
-
+        update_time_series()
     stop = Event()
 
     with TimeSeriesUploadQueue(
@@ -177,31 +197,27 @@ def main():
                     repr(message.payload[:16]),
                 )
 
-                handle = _handlers.get(message.topic)
+                handle = get_handler(message.topic)
                 if not handle:
                     logger.debug("Unhandled topic: %s", message.topic)
                     return
                     
                 for ts_id, time_stamp, value in handle(message.payload, message.topic):
-
                     logger.debug("Data point %s %d %r", ts_id, time_stamp, value)
                     external_id = config.cognite.external_id_prefix + ts_id
 
                     # Add to TS upload queue
                     # if time_stamp is not None and value is not None:
                     if value is not None:
-                        upload_timestamp = int(datetime.now().timestamp() * 1000)  # Source system timestamp is wrong so we use now instead.
                         upload_queue.add_to_upload_queue(
-                            external_id=external_id, datapoints=[(upload_timestamp, value)]
+                            external_id=external_id, datapoints=[(time_stamp, value)]
                         )
-                    if upload_timestamp > message_time_stamp:
-                        message_time_stamp = upload_timestamp
                 
                 # Upload any remaining TS in queue
                 upload_queue.upload()
 
                 metrics.messages.inc()
-                metrics.message_time_stamp.set(message_time_stamp)
+                metrics.message_time_stamp.set(time_stamp)
             except Exception:
                 logger.exception("on_message")
 

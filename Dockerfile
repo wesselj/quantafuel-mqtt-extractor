@@ -19,8 +19,6 @@ WORKDIR /usr/src/app
 COPY --chown=python:python pyproject.toml .
 COPY --chown=python:python mqtt_extractor ./mqtt_extractor
 COPY --chown=python:python tests ./tests
-COPY --chown=python:python Kognifai ./Kognifai
-COPY --chown=python:python protobuf_definitions ./protobuf_definitions
 ADD pyproject.toml ./pyproject.toml
 
 RUN pip install --upgrade pip && pip install poetry

@@ -1,4 +1,6 @@
 from json import loads
+from datetime import datetime
+from cognite.client.data_classes import time_series
 import logging
 
 logger = logging.getLogger(__name__)
@@ -22,13 +24,36 @@ def parse(payload: bytes, topic: str):
     yield extid, timestamp, value
 
 
+def get_timeseries_to_update():
+    timeseries = []
+    for key in TimeseriesHolder.timeseries.keys():
+        value = TimeseriesHolder.timeseries.get(key)
+        ts = time_series.TimeSeries(external_id=key)
+        if "payload" in value:
+            tags = value["payload"]["tags"]
+        else:
+            tags = value["tags"]
+        ts.name = tags["PlantId"]
+        ts.description = tags["LegendIDU"]
+        ts.unit = tags["Units"]
+        ts.metadata = tags
+        timeseries.append(ts)
+    TimeseriesHolder.timeseries.clear()
+    return timeseries
+
+
 def parse_ts_value(message: dict, topic: str):
-    item = message["payload"]
+    if "payload" in message:
+        item = message["payload"]
+    else:
+        item = message
     measurement = item["measurement"]
     tags = item["tags"]
     equipment_id = tags["EquipID"]
     extid = equipment_id + ":" + measurement
-    timestamp = item["timestamp"]
+    timestamp_str = item["timestamp"]
+    timestamp = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+    timestamp_long = timestamp.timestamp() * 1000
     value = item["fields"]["DatVal"]
-    return extid, timestamp, value
+    return extid, timestamp_long, value
 
