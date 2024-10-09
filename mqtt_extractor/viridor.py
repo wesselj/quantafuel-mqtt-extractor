@@ -51,7 +51,7 @@ def parse_ts_value(message: dict, topic: str):
     measurement = item["measurement"]
     tags = item["tags"]
     equipment_id = tags["EquipID"]
-    extid = "P2_" + equipment_id + ":" + measurement
+    extid = "P2:" + equipment_id + ":" + measurement
     timestamp_str = item["timestamp"]
     timestamp = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S.%fZ")
     timestamp_long = timestamp.timestamp() * 1000
