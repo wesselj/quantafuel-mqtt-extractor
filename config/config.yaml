@@ -13,7 +13,7 @@ subscriptions:
 upload-interval: 1
 status-interval: 60
 ts-metadata-interval: 60
-status-pipeline: viridor-mqtt-extractor
+status-pipeline: p2_pipeline
 dataset: p2_ds
 
 
