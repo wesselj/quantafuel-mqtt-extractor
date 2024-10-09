@@ -11,8 +11,10 @@ subscriptions:
       module: mqtt_extractor.viridor
 
 upload-interval: 1
-# status-interval: 60
-# status-pipeline: mqtt-extractor
+status-interval: 60
+ts-metadata-interval: 10
+# status-pipeline:
+dataset: src:001:txt
 
 
 logger:

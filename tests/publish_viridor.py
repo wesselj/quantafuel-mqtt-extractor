@@ -44,13 +44,13 @@ def main():
                           "LegendIU": "U_HVAC_TT52105_T (degC)",
                           "AreaMaj": "U",
                           "AreaSub": "HVAC",
-                          "EquipID": "TT52105",
+                          "EquipID": "TT52105_2",
                           "PlantDsc": "Clean area tmp 5",
                           "EquipTyp": "T",
                           "DataMin": "0",
                           "DataMax": "44",
                           "Units": "degC"},
-                 "timestamp": "2024-10-07T09:37:31.244Z"}
+                 "timestamp": "2024-10-09T09:30:00.100Z"}
                }
     client.publish(topic, json.dumps(message))
     time.sleep(1)

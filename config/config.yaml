@@ -3,26 +3,28 @@ version: 1
 mqtt:
   hostname: localhost
   port: 1883
-  
+
 subscriptions:
-  - topic: data
+  - topic: /PolymerP2/#
     qos: 1
     handler:
       module: mqtt_extractor.viridor
 
-
 upload-interval: 1
-# status-interval: 60
-# status-pipeline: mqtt-extractor
+status-interval: 60
+ts-metadata-interval: 60
+status-pipeline: viridor-mqtt-extractor
+dataset: p2_ds
 
 
 logger:
   console:
     level: DEBUG
 
+
 cognite:
   host: https://api.cognitedata.com
-  project: xxx
+  project: susana
   idp-authentication:
     authority: "https://login.microsoftonline.com/"
     # tenant: xxx-xxx

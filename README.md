@@ -48,12 +48,12 @@ The module `tests.custom` can be used to handle a custom payload format with the
 
 Build docker image locally:
 
-    docker build . -t kchief-mqtt-extractor
+    docker build . -t quantafuel-mqtt-extractor
 
 Test the docker image locally:
 
-    docker run --rm --name kchief-mqtt-extractor -v $HOME/kchief-mqtt-extractor/config:/usr/src/app/config kchief-mqtt-extractor
+    docker run --rm --name quantafuel-mqtt-extractor -v $HOME/quantafuel-mqtt-extractor/config:/usr/src/app/config quantafuel-mqtt-extractor
 
 Run docker container from local build mounting the local config file:
 
-    docker run -d --restart unless-stopped --name kchief-mqtt-extractor --log-driver json-file --log-opt max-size=10m -v $HOME/kchief-mqtt-extractor/config:/usr/src/app/config kchief-mqtt-extractor kchief-mqtt-extractor
+    docker run -d --restart unless-stopped --name quantafuel-mqtt-extractor --log-driver json-file --log-opt max-size=10m -v $HOME/quantafuel-mqtt-extractor/config:/usr/src/app/config quantafuel-mqtt-extractor quantafuel-mqtt-extractor

@@ -5,7 +5,7 @@ import time
 import re
 from datetime import datetime
 from dataclasses import dataclass, field
-from threading import Event
+from threading import Event, Thread
 from typing import List
 from cognite.client import CogniteClient
 from cognite.client.data_classes import ExtractionPipelineRun
@@ -57,6 +57,9 @@ class Config(BaseConfig):
     create_missing: bool = True
     status_pipeline: str = None
     status_interval: int = 60
+    ts_metadata_interval: int = 60
+    ts_metadata_update: bool = True
+    dataset: str = None
 
 
 def config_logging(config_file):
@@ -139,11 +142,15 @@ def main():
     message_time_stamp = 0
     cdf_time_stamp = 0
     status_time_stamp = 0
+    update_ts_metadata = config.ts_metadata_update
 
     def update_time_series():
-        timeseries = viridor.get_timeseries_to_update()
-        for ts in timeseries:
-            cdf_client.time_series.update(ts)
+        while update_ts_metadata:
+            time.sleep(config.ts_metadata_interval)
+            logger.info("Updating timeseries metadata")
+            timeseries = viridor.get_timeseries_to_update()
+            for ts in timeseries:
+                cdf_client.time_series.update(ts)
 
     def post_upload_handler(ts_dps):
         dps = sum(len(ts["datapoints"]) for ts in ts_dps)
@@ -175,8 +182,10 @@ def main():
         except Exception:
             # Risk of too many stack traces?
             logger.exception("post upload handler")
-        update_time_series()
+
     stop = Event()
+    thread = Thread(target=update_time_series)
+    thread.start()
 
     with TimeSeriesUploadQueue(
         cdf_client,
