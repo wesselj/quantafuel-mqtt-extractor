@@ -5,3 +5,4 @@ logs/
 *.log
 /quantafuel-mqtt-extractor.iml
 /.env
+/config/config_local.yaml
