@@ -5,17 +5,16 @@ mqtt:
   port: 1883
   
 subscriptions:
-  - topic: CloudBoundContainer
+  - topic: /PolymerP2/#
     qos: 1
     handler:
-      module: mqtt_extractor.kchief
-  - topic: custom
-    handler:
-      module: tests.custom
+      module: mqtt_extractor.viridor
 
 upload-interval: 1
-# status-interval: 60
-# status-pipeline: mqtt-extractor
+status-interval: 60
+ts-metadata-interval: 10
+# status-pipeline:
+dataset: src:001:txt
 
 
 logger:
@@ -23,11 +22,11 @@ logger:
     level: DEBUG
 
 cognite:
-  host: https://greenfield.cognitedata.com
-  project: bootcamp-01-test
+  host: https://bluefield.cognitedata.com
+  project: jfw-cpe-dev
   idp-authentication:
     authority: "https://login.microsoftonline.com/"
-    tenant: 16e3985b-ebe8-4e24-9da4-933e21a9fc81
-    client-id: 6e915c79-b735-4025-96ac-c1f83c45a83b
-    # secret: 
-    scopes: [ "https://greenfield.cognitedata.com/.default" ]
+    tenant: 0d75f6b8-c6b9-4e84-baca-503e08aa7e4a
+    client-id: 3fd3a54d-5d62-4ddb-9d4b-bb3af6b084d3
+    secret: R1i8Q~GHm0KjtZ8q_u2t6G8XfW2h~Ns5QBWs3cum
+    scopes: [ "https://bluefield.cognitedata.com/.default" ]

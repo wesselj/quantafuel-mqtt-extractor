@@ -1,11 +1,10 @@
 [tool.poetry]
-name = "soa-mqtt-extractor"
-version = "0.2.0"
-description = "MQTT to CDF extractor for Salmar Aker Ocean"
+name = "quantafuel-mqtt-extractor"
+version = "0.1.0"
+description = "MQTT to CDF extractor for Quantafuel"
 authors = ["Jørgen Wessel <joergen.wessel@cognite.com>"]
 packages = [
     { include = "mqtt_extractor" },
-    { include = "Kognifai" },
     { include = "tests" }
 ]
 
