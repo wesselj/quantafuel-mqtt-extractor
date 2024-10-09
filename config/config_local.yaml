@@ -28,5 +28,5 @@ cognite:
     authority: "https://login.microsoftonline.com/"
     tenant: 0d75f6b8-c6b9-4e84-baca-503e08aa7e4a
     client-id: 3fd3a54d-5d62-4ddb-9d4b-bb3af6b084d3
-    secret: R1i8Q~GHm0KjtZ8q_u2t6G8XfW2h~Ns5QBWs3cum
+    #secret: 
     scopes: [ "https://bluefield.cognitedata.com/.default" ]
