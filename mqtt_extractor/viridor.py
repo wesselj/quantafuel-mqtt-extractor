@@ -35,7 +35,8 @@ def get_timeseries_to_update():
             tags = value["tags"]
         ts.name = tags["PlantId"]
         ts.description = tags["LegendIDU"]
-        ts.unit = tags["Units"]
+        if "Units" in tags:
+            ts.unit = tags["Units"]
         ts.metadata = tags
         timeseries.append(ts)
     TimeseriesHolder.timeseries.clear()

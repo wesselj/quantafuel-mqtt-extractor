@@ -35,7 +35,7 @@ def main():
     client = mqtt_client("localhost", 1883)
     time.sleep(1)
     topic = "/PolymerP2/U/HVAC/TT52105/T"
-    message = {"payload": {"measurement": "FltMeas",
+    message_old = {"payload": {"measurement": "FltMeas",
                  "fields": {"DatVal": 38,
                             "DatSta": "false"},
                  "tags": {"PlantId": "U_HVAC_TT52105_T",
@@ -52,6 +52,7 @@ def main():
                           "Units": "degC"},
                  "timestamp": "2024-10-09T09:30:00.100Z"}
                }
+    message = {"measurement":"IntMeas_2","fields":{"DatVal":95,"DatSta":False},"tags":{"PlantId":"U_HVAC_T52205_T","LegendID":"U_HVAC_T52205_T (Dirty area tmp 5)","LegendIDU":"U_HVAC_T52205_T (Dirty area tmp 5) (degC)","LegendIU":"U_HVAC_T52205_T (degC)","AreaMaj":"U","AreaSub":"HVAC","EquipID":"T52205","PlantDsc":"Dirty area tmp 5","EquipTyp":"T","DataMin":"0","DataMax":"44"},"timestamp":"2024-10-09T13:04:11.255Z"}
     client.publish(topic, json.dumps(message))
     time.sleep(1)
     client.disconnect()
