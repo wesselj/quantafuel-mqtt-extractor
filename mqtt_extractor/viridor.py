@@ -56,5 +56,10 @@ def parse_ts_value(message: dict, topic: str):
     timestamp = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S.%fZ")
     timestamp_long = timestamp.timestamp() * 1000
     value = item["fields"]["DatVal"]
+    if isinstance(value, bool):
+        if value:
+            value = 1
+        else:
+            value = 0
     return extid, timestamp_long, value
 
