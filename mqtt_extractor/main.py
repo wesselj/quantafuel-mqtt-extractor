@@ -150,6 +150,8 @@ def main():
             logger.info("Updating timeseries metadata")
             timeseries = viridor.get_timeseries_to_update()
             for ts in timeseries:
+                if config.dataset:
+                    ts.data_set_id = config.dataset
                 cdf_client.time_series.update(ts)
 
     def post_upload_handler(ts_dps):
