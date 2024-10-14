@@ -24,8 +24,8 @@ def parse(payload: bytes, topic: str):
     yield extid, timestamp, value
 
 
-def get_timeseries_to_update():
-    timeseries = []
+def get_timeseries_to_update(dataset_id) -> list:
+    ts_list = []
     for key in TimeseriesHolder.timeseries.keys():
         value = TimeseriesHolder.timeseries.get(key)
         ts = time_series.TimeSeries(external_id=key)
@@ -38,9 +38,10 @@ def get_timeseries_to_update():
         if "Units" in tags:
             ts.unit = tags["Units"]
         ts.metadata = tags
-        timeseries.append(ts)
+        ts.data_set_id = dataset_id
+        ts_list.append(ts)
     TimeseriesHolder.timeseries.clear()
-    return timeseries
+    return ts_list
 
 
 def parse_ts_value(message: dict, topic: str):

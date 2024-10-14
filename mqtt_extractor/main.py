@@ -145,14 +145,14 @@ def main():
     update_ts_metadata = config.ts_metadata_update
 
     def update_time_series():
+        dataset_id = None
+        if config.dataset:
+            dataset_id = config.dataset
         while update_ts_metadata:
             time.sleep(config.ts_metadata_interval)
-            logger.info("Updating timeseries metadata")
-            timeseries = viridor.get_timeseries_to_update()
-            for ts in timeseries:
-                if config.dataset:
-                    ts.data_set_id = config.dataset
-                cdf_client.time_series.update(ts)
+            timeseries = viridor.get_timeseries_to_update(dataset_id)
+            logger.info(f"Updating metadata for {len(timeseries)} timeseries.")
+            cdf_client.time_series.update(timeseries)
 
     def post_upload_handler(ts_dps):
         dps = sum(len(ts["datapoints"]) for ts in ts_dps)
