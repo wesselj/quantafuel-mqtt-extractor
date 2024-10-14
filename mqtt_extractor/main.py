@@ -149,10 +149,14 @@ def main():
         if config.dataset:
             dataset_id = config.dataset
         while update_ts_metadata:
-            time.sleep(config.ts_metadata_interval)
-            timeseries = viridor.get_timeseries_to_update(dataset_id)
-            logger.info(f"Updating metadata for {len(timeseries)} timeseries.")
-            cdf_client.time_series.update(timeseries)
+            try:
+                time.sleep(config.ts_metadata_interval)
+                timeseries = viridor.get_timeseries_to_update(dataset_id)
+                logger.info(f"Updating metadata for {len(timeseries)} timeseries.")
+                cdf_client.time_series.update(timeseries)
+            except Exception as e:
+                # Risk of too many stack traces?
+                logger.exception(f"Error updating metadata for timeseries: {e}")
 
     def post_upload_handler(ts_dps):
         dps = sum(len(ts["datapoints"]) for ts in ts_dps)
