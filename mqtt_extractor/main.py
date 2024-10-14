@@ -223,9 +223,6 @@ def main():
                         upload_queue.add_to_upload_queue(
                             external_id=external_id, datapoints=[(time_stamp, value)]
                         )
-                
-                # Upload any remaining TS in queue
-                upload_queue.upload()
 
                 metrics.messages.inc()
                 metrics.message_time_stamp.set(time_stamp)
