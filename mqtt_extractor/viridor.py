@@ -20,7 +20,8 @@ def parse(payload: bytes, topic: str):
     msg = loads(payload)
     logger.debug("Message: %r %r", topic, msg)
     extid, timestamp, value = parse_ts_value(msg, topic)
-    TimeseriesHolder.add(extid, msg, topic)
+    if value is not None:
+        TimeseriesHolder.add(extid, msg, topic)
     yield extid, timestamp, value
 
 

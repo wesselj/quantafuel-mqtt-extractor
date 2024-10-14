@@ -156,7 +156,7 @@ def main():
                 cdf_client.time_series.update(timeseries)
             except Exception as e:
                 # Risk of too many stack traces?
-                logger.exception(f"Error updating metadata for timeseries: {e}")
+                logger.exception("Error updating metadata for timeseries", e)
 
     def post_upload_handler(ts_dps):
         dps = sum(len(ts["datapoints"]) for ts in ts_dps)
@@ -227,6 +227,8 @@ def main():
                         upload_queue.add_to_upload_queue(
                             external_id=external_id, datapoints=[(time_stamp, value)]
                         )
+                    else:
+                        logging.warn(f"No value exists for timeseries {external_id} for topic {message.topic}")
 
                 metrics.messages.inc()
                 metrics.message_time_stamp.set(time_stamp)
