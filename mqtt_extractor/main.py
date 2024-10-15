@@ -81,7 +81,7 @@ def get_handler(topic: str):
         for handler_name in _handlers.keys():
 
             tp_re = handler_name.replace("+", "(\\w+/?)")
-            tp_re = tp_re.replace("#", "((\\w|-)+/?)*")
+            tp_re = tp_re.replace("#", "((\\w|-|\\.)+/?)*")
             tp_re = "^" + tp_re + "$"
             if re.match(tp_re, topic):
                 handler = _handlers[handler_name]
