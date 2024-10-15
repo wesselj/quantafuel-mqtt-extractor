@@ -56,7 +56,7 @@ def parse_ts_value(message: dict, topic: str):
     #    extid = "P2_" + tags["PlantId"]
     #else:
     plant_id = topic.replace("/PolymerP2", "P2", 1)
-    ext_id = plant_id.replace("/", "_")
+    extid = plant_id.replace("/", "_")
     timestamp_str = item["timestamp"]
     timestamp = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S.%fZ")
     timestamp_long = timestamp.timestamp() * 1000
