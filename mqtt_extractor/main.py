@@ -81,7 +81,7 @@ def get_handler(topic: str):
         for handler_name in _handlers.keys():
 
             tp_re = handler_name.replace("+", "(\\w+/?)")
-            tp_re = tp_re.replace("#", "(\\w+/?)*")
+            tp_re = tp_re.replace("#", "((\\w|-)+/?)*")
             tp_re = "^" + tp_re + "$"
             if re.match(tp_re, topic):
                 handler = _handlers[handler_name]
@@ -214,7 +214,7 @@ def main():
 
                 handle = get_handler(message.topic)
                 if not handle:
-                    logger.debug("Unhandled topic: %s", message.topic)
+                    logger.warning("Unhandled topic: %s", message.topic)
                     return
                     
                 for ts_id, time_stamp, value in handle(message.payload, message.topic):
